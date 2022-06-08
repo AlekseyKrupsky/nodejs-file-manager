@@ -1,12 +1,12 @@
 import { createReadStream, createWriteStream, access, constants, cp, rename as renameFile } from 'node:fs';
 import { stat, rm } from 'node:fs/promises';
-import { operationFailed } from "./messages.js";
+import { printOperationFailed } from "./messages.js";
 import path from 'node:path';
 
 const read = async ([filepath]) => {
     createReadStream(filepath, { encoding: 'utf-8' })
         .on('error', () => {
-            operationFailed();
+            printOperationFailed();
         })
         .on('data', (fileContent) => {
             console.log(fileContent);
@@ -16,7 +16,7 @@ const read = async ([filepath]) => {
 const write = async ([filename]) => {
     createWriteStream(filename, { flags: 'wx' })
         .on('error', () => {
-            operationFailed();
+            printOperationFailed();
         })
         .end('');
 };
@@ -25,7 +25,7 @@ const rename = async ([filepath, newFileName]) => {
     const pathSeparator = path.sep;
 
     if (newFileName.search(pathSeparator) !== -1) {
-        operationFailed();
+        printOperationFailed();
 
         return;
     }
@@ -41,7 +41,7 @@ const rename = async ([filepath, newFileName]) => {
             throw new Error('It is directory');
         }
     } catch (error) {
-        operationFailed();
+        printOperationFailed();
 
         return;
     }
@@ -55,14 +55,14 @@ const rename = async ([filepath, newFileName]) => {
 
     access(newFilePath, constants.F_OK, (accessError) => {
         if (null === accessError) {
-            operationFailed();
+            printOperationFailed();
 
             return;
         }
 
         renameFile(filepath, newFilePath, ((renameError) => {
             if (null !== renameError) {
-                operationFailed();
+                printOperationFailed();
             }
         }));
     });
@@ -79,7 +79,7 @@ const copy = async ([pathToFile, pathToNewDirectory]) => {
 
     cp(pathToFile, newFilePath, { force: false, errorOnExist: true }, (error) => {
         if (null !== error) {
-            operationFailed();
+            printOperationFailed();
         }
     });
 };
@@ -88,7 +88,7 @@ const move = async ([pathToFile, pathToNewDirectory]) => {
     const pathSeparator = path.sep;
 
     // if (newFileName.search(pathSeparator) !== -1) {
-    //     operationFailed();
+    //     printOperationFailed();
     //
     //     return;
     // }
@@ -104,7 +104,7 @@ const move = async ([pathToFile, pathToNewDirectory]) => {
             throw new Error('It is directory');
         }
     } catch (error) {
-        operationFailed();
+        printOperationFailed();
 
         return;
     }
@@ -126,14 +126,14 @@ const move = async ([pathToFile, pathToNewDirectory]) => {
 
     access(newFilePath, constants.F_OK, (accessError) => {
         if (null === accessError) {
-            operationFailed();
+            printOperationFailed();
 
             return;
         }
 
         renameFile(pathToFile, newFilePath, ((renameError) => {
             if (null !== renameError) {
-                operationFailed();
+                printOperationFailed();
             }
         }));
     });
@@ -141,7 +141,7 @@ const move = async ([pathToFile, pathToNewDirectory]) => {
 
 const remove = async ([pathToFile]) => {
     await rm(pathToFile).catch(() => {
-        operationFailed();
+        printOperationFailed();
     });
 };
 

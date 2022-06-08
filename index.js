@@ -2,22 +2,23 @@ import process, {chdir, cwd, stdin, stdout} from 'node:process';
 import os from 'node:os';
 import readline from 'node:readline';
 import { changeDir, dirUp, list } from './navigation.js';
-import { read } from './files.js';
+import { read, write, rename, copy } from './files.js';
 
 const AVAILABLE_COMMANDS_METHODS_MAP = {
     up: dirUp,
     cd: changeDir,
     ls: list,
     cat: read,
-    'add': null,
-    'rn': null,
-    'cp': null,
-    'mv': null,
-    'rm': null,
-    'os': null,
-    'hash': null,
-    'compress': null,
-    'decompress': null,
+    add: write,
+    rn: rename,
+    cp: copy,
+    mv: null,
+    rm: null,
+    os: null,
+    hash: null,
+    compress: null,
+    decompress: null,
+    '.exit': null,
 };
 
 const args = process.argv.slice(2);

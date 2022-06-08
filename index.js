@@ -2,7 +2,7 @@ import process, {chdir, cwd, stdin, stdout} from 'node:process';
 import os from 'node:os';
 import readline from 'node:readline';
 import { changeDir, dirUp, list } from './navigation.js';
-import { read, write, rename, copy } from './files.js';
+import { read, write, rename, copy, move, remove } from './files.js';
 
 const AVAILABLE_COMMANDS_METHODS_MAP = {
     up: dirUp,
@@ -12,8 +12,8 @@ const AVAILABLE_COMMANDS_METHODS_MAP = {
     add: write,
     rn: rename,
     cp: copy,
-    mv: null,
-    rm: null,
+    mv: move,
+    rm: remove,
     os: null,
     hash: null,
     compress: null,

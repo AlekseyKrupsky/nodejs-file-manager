@@ -118,11 +118,6 @@ const move = async ([pathToFile, pathToNewDirectory]) => {
     splittedNewDirectoryPath.push(fileName);
 
     const newFilePath = splittedNewDirectoryPath.join(pathSeparator);
-        // const newFilePath = splittedFilePath.join(pathSeparator);
-
-    // console.log(pathToFile);
-    // console.log(splittedNewDirectoryPath);
-
 
     access(newFilePath, constants.F_OK, (accessError) => {
         if (null === accessError) {

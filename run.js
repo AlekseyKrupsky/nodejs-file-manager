@@ -2,7 +2,7 @@ import process from "node:process";
 import { printWelcome, printCurrentDir } from './messages.js';
 import os from "node:os";
 
-export const run = () => {
+export const runInit = () => {
     const args = process.argv.slice(2);
 
     let username = '';

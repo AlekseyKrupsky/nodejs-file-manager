@@ -1,8 +1,8 @@
 import process from "node:process";
-import { printThankYou } from "./messages.js";
+import messagePrinter from "./messages.js";
 
 export const exitManager = () => {
-    printThankYou();
+    messagePrinter.printThankYou();
 
     process.exit();
 };

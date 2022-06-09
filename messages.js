@@ -1,23 +1,41 @@
 import { cwd } from "node:process";
+import os from "node:os";
 
-const printInvalidInput = () => {
-    console.log('Invalid input');
-};
+class MessagePrinter {
+    setReadline = (rl) => {
+        this.rl = rl;
+    };
 
-const printOperationFailed = () => {
-    console.log('Operation failed');
-};
+    setUserName = (username) => {
+        this.username = username;
+    };
 
-const printWelcome = () => {
-    console.log(`Welcome to the File Manager, ${global.username}!`);
-};
+    printInvalidInput = () => {
+        console.log('Invalid input');
+    };
 
-const printCurrentDir = () => {
-    console.log(`You are currently in ${cwd()}`);
-};
+    printOperationFailed = () => {
+        console.log('Operation failed');
+    };
 
-const printThankYou = () => {
-    console.log(`Thank you for using File Manager, ${global.username}!`);
-};
+    printWelcome = () => {
+        console.log(`Welcome to the File Manager, ${this.username}!`);
+    };
 
-export { printOperationFailed, printInvalidInput, printWelcome, printThankYou, printCurrentDir };
+    printCurrentDir = () => {
+        console.log(`You are currently in ${cwd()}`);
+    };
+
+    printThankYou = () => {
+        const firstSymbol = this.rl.closed ? os.EOL : '';
+
+        console.log(`${firstSymbol}Thank you for using File Manager, ${this.username}!`);
+    };
+
+    printPrompt = () => {
+        this.rl.setPrompt(`${cwd()} >> `);
+        this.rl.prompt();
+    };
+}
+
+export default new MessagePrinter();

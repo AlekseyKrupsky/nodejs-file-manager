@@ -1,5 +1,6 @@
 import os from 'node:os';
-import { printInvalidInput } from './messages.js';
+import { argsCountValidator } from "./argsValidator.js";
+import { INVALID_INPUT } from "./errors.js";
 
 const getCPUInfo = () => {
     const cpus = os.cpus();
@@ -27,11 +28,13 @@ const AVAILABLE_ARGUMENTS = {
     '--architecture': os.arch,
 };
 
-export const operationSystem = async ([argument]) => {
-    if (AVAILABLE_ARGUMENTS[argument] === undefined) {
-        printInvalidInput();
+export const operationSystem = async (args) => {
+    argsCountValidator(args, 1);
 
-        return;
+    const [argument] = args;
+
+    if (AVAILABLE_ARGUMENTS[argument] === undefined) {
+        throw new Error(INVALID_INPUT);
     }
 
     if (typeof AVAILABLE_ARGUMENTS[argument] === "function") {

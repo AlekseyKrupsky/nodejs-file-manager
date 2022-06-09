@@ -2,12 +2,17 @@ import { createWriteStream } from 'node:fs';
 import { open } from 'node:fs/promises';
 import { pipeline } from 'node:stream';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
-import { printOperationFailed } from "./messages.js";
+import { argsCountValidator } from "./argsValidator.js";
+import { OPERATIONS_FAILED } from "./errors.js";
 
 const COMPRESS_TYPE = 'compress';
 const DECOMPRESS_TYPE = 'decompress';
 
-const action = async (type, pathToSourceFile, pathToDestinationFile) => {
+const action = async (type, args) => {
+    argsCountValidator(args, 2);
+
+    const [pathToSourceFile, pathToDestinationFile] = args;
+
     let brotliHandler;
 
     if (COMPRESS_TYPE === type) {
@@ -16,28 +21,28 @@ const action = async (type, pathToSourceFile, pathToDestinationFile) => {
         brotliHandler = createBrotliDecompress();
     }
 
-    try {
-        const sourceFd = await open(pathToSourceFile);
+    const sourceFd = await open(pathToSourceFile);
 
-        const source = sourceFd.createReadStream();
-        const destination = createWriteStream(pathToDestinationFile, { flags: 'wx' });
+    const source = sourceFd.createReadStream();
+    const destination = createWriteStream(pathToDestinationFile, {flags: 'wx'});
 
+    return new Promise((resolve, reject) => {
         pipeline(source, brotliHandler, destination, (err) => {
             if (err) {
-                printOperationFailed();
+                reject(OPERATIONS_FAILED);
             }
+
+            resolve();
         });
-    } catch (error) {
-        printOperationFailed();
-    }
+    });
 };
 
-const compress = async ([pathToSourceFile, pathToDestinationFile]) => {
-    await action(COMPRESS_TYPE, pathToSourceFile, pathToDestinationFile);
+const compress = async (args) => {
+    await action(COMPRESS_TYPE, args);
 };
 
-const decompress = async ([pathToSourceFile, pathToDestinationFile]) => {
-    await action(DECOMPRESS_TYPE, pathToSourceFile, pathToDestinationFile);
+const decompress = async (args) => {
+    await action(DECOMPRESS_TYPE, args);
 };
 
 export { compress, decompress };

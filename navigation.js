@@ -1,25 +1,27 @@
 import { readdir } from 'node:fs/promises';
 import { chdir, cwd } from 'node:process';
-import { printOperationFailed } from "./messages.js";
+import { argsCountValidator } from "./argsValidator.js";
 
-const list = async () => {
+const list = async (args) => {
+    argsCountValidator(args, 0);
+
     await readdir(cwd()).then((files) => {
         files.forEach(file => console.log(file));
-    }).catch(() => {
-        printOperationFailed();
     });
 };
 
-const changeDir = (args) => {
-    try {
-        chdir(args[0]);
-    } catch (error) {
-        printOperationFailed();
-    }
+const changeDir = async (args) => {
+    argsCountValidator(args, 1);
+
+    const [destinationDir] = args;
+
+    chdir(destinationDir);
 };
 
-const dirUp = () => {
-    changeDir(['..']);
+const dirUp = async (args) => {
+    argsCountValidator(args, 0);
+
+    await changeDir(['..']);
 };
 
 export { list, changeDir, dirUp };

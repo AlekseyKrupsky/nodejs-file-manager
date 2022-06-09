@@ -1,5 +1,5 @@
 import process from "node:process";
-import { printWelcome, printCurrentDir } from './messages.js';
+import messagePrinter from './messages.js';
 import os from "node:os";
 
 export const runInit = () => {
@@ -19,11 +19,9 @@ export const runInit = () => {
         process.exit(1);
     }
 
-    global.username = username;
-
-    printWelcome();
-
     process.chdir(os.homedir());
 
-    printCurrentDir();
+    messagePrinter.setUserName(username);
+    messagePrinter.printWelcome();
+    messagePrinter.printCurrentDir();
 };

@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-file-manager",
+  "version": "1.0.0",
+  "description": "File manager",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlekseyKrupsky/nodejs-file-manager.git"
+  },
+  "author": "Aleksey Krupsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlekseyKrupsky/nodejs-file-manager/issues"
+  },
+  "homepage": "https://github.com/AlekseyKrupsky/nodejs-file-manager#readme"
+}

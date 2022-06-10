@@ -22,6 +22,7 @@ export const hash = async (args) => {
                 console.log(`Hex hash: ${hash.digest('hex')}`);
 
                 readStream.close();
+                resolve();
             });
     });
 };

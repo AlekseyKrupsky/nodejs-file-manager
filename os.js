@@ -8,7 +8,7 @@ const getCPUInfo = () => {
     let cpusInfo = `CPUs count is ${cpus.length}${os.EOL}`;
 
     cpus.forEach((cpu) => {
-        cpusInfo += `Model: ${cpu.model}, clock rate: ${cpu.speed / 1000} GHz${os.EOL}`;
+        cpusInfo += `Model: ${cpu.model.trim()}, clock rate: ${cpu.speed / 1000} GHz${os.EOL}`;
     });
 
     return cpusInfo;

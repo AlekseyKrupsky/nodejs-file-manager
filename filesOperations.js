@@ -30,6 +30,10 @@ const write = async (args) => {
 
     const [filename] = args;
 
+    if (path.parse(filename).dir !== '') {
+        throw new Error(OPERATIONS_FAILED);
+    }
+
     return new Promise((resolve, reject) => {
         createWriteStream(filename, { flags: 'wx' }).end('')
             .on('error', () => {
@@ -48,20 +52,20 @@ const rename = async (args) => {
 
     await checkIsDirectory(pathToFile);
 
-    const pathSeparator = path.sep;
+    const formattedPathToFile = path.format(path.parse(pathToFile));
 
-    if (newFileName.search(pathSeparator) !== -1) {
+    if (path.parse(newFileName).dir !== '') {
         throw new Error(OPERATIONS_FAILED);
     }
 
-    const splittedFilePath = pathToFile.split(pathSeparator);
+    const splittedFilePath = formattedPathToFile.split(path.sep);
 
     splittedFilePath.pop();
     splittedFilePath.push(newFileName);
 
-    const newFilePath = splittedFilePath.join(pathSeparator);
+    const newFilePath = splittedFilePath.join(path.sep);
 
-    return getRenamePromise(pathToFile, newFilePath);
+    return getRenamePromise(formattedPathToFile, newFilePath);
 };
 
 const copy = async (args) => {
@@ -129,13 +133,14 @@ const getRenamePromise = (pathToFile, newFilePath) => {
 };
 
 const generateNewFilePath = (pathToFile, pathToNewDirectory) => {
-    const pathSeparator = path.sep;
-    const fileName = pathToFile.split(pathSeparator).pop();
-    const splittedNewDirectoryPath = pathToNewDirectory.split(pathSeparator);
+    const formattedPathToFile = path.format(path.parse(pathToFile));
+
+    const fileName = formattedPathToFile.split(path.sep).pop();
+    const splittedNewDirectoryPath = pathToNewDirectory.split(path.sep);
 
     splittedNewDirectoryPath.push(fileName);
 
-    return splittedNewDirectoryPath.join(pathSeparator);
+    return splittedNewDirectoryPath.join(path.sep);
 };
 
-export { read, write, rename, copy, move, remove };
+export { read, write, rename, copy, move, remove, checkIsDirectory, generateNewFilePath };

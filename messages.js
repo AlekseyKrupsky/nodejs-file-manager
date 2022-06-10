@@ -1,6 +1,11 @@
 import { cwd } from "node:process";
 import os from "node:os";
 
+const COLORS = {
+    red: '\x1b[31m%s\x1b[0m',
+    green: '\x1b[32m%s\x1b[0m',
+}
+
 class MessagePrinter {
     setReadline = (rl) => {
         this.rl = rl;
@@ -11,11 +16,11 @@ class MessagePrinter {
     };
 
     printInvalidInput = () => {
-        console.log('Invalid input');
+        console.log(COLORS.red, 'Invalid input');
     };
 
     printOperationFailed = () => {
-        console.log('Operation failed');
+        console.log(COLORS.red, 'Operation failed');
     };
 
     printWelcome = () => {
@@ -33,7 +38,7 @@ class MessagePrinter {
     };
 
     printPrompt = () => {
-        this.rl.setPrompt(`${cwd()} >> `);
+        this.rl.setPrompt(`${COLORS.green.replace('%s', cwd())} >> `);
         this.rl.prompt();
     };
 }
